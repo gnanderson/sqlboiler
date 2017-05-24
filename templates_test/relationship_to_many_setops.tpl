@@ -6,7 +6,7 @@
 	{{- $varNameSingular := .Table | singular | camelCase -}}
 	{{- $foreignVarNameSingular := .ForeignTable | singular | camelCase -}}
 	{{- $txt := txtsFromToMany $dot.Tables $table .}}
-func test{{$txt.LocalTable.NameGo}}ToManyAddOp{{$txt.Function.Name}}(t *testing.T) {
+func test{{$txt.LocalTable.NameGo}}ToManyAddOp{{$txt.Function.Name | IDFK}}(t *testing.T) {
 	var err error
 
 	tx := MustTx(boil.Begin())
@@ -42,7 +42,7 @@ func test{{$txt.LocalTable.NameGo}}ToManyAddOp{{$txt.Function.Name}}(t *testing.
 	}
 
 	for i, x := range foreignersSplitByInsertion {
-		err = a.Add{{$txt.Function.Name}}(tx, i != 0, x...)
+		err = a.Add{{$txt.Function.Name | IDFK}}(tx, i != 0, x...)
 		if err != nil {
 			t.Fatal(err)
 		}
@@ -83,14 +83,14 @@ func test{{$txt.LocalTable.NameGo}}ToManyAddOp{{$txt.Function.Name}}(t *testing.
 		}
 		{{- end}}
 
-		if a.R.{{$txt.Function.Name}}[i*2] != first {
+		if a.R.{{$txt.Function.Name | IDFK}}[i*2] != first {
 			t.Error("relationship struct slice not set to correct value")
 		}
-		if a.R.{{$txt.Function.Name}}[i*2+1] != second {
+		if a.R.{{$txt.Function.Name | IDFK}}[i*2+1] != second {
 			t.Error("relationship struct slice not set to correct value")
 		}
 
-		count, err := a.{{$txt.Function.Name}}(tx).Count()
+		count, err := a.{{$txt.Function.Name | IDFK}}(tx).Count()
 		if err != nil {
 			t.Fatal(err)
 		}
@@ -101,7 +101,7 @@ func test{{$txt.LocalTable.NameGo}}ToManyAddOp{{$txt.Function.Name}}(t *testing.
 }
 {{- if (or .ForeignColumnNullable .ToJoinTable)}}
 
-func test{{$txt.LocalTable.NameGo}}ToManySetOp{{$txt.Function.Name}}(t *testing.T) {
+func test{{$txt.LocalTable.NameGo}}ToManySetOp{{$txt.Function.Name | IDFK}}(t *testing.T) {
 	var err error
 
 	tx := MustTx(boil.Begin())
@@ -131,12 +131,12 @@ func test{{$txt.LocalTable.NameGo}}ToManySetOp{{$txt.Function.Name}}(t *testing.
 		t.Fatal(err)
 	}
 
-	err = a.Set{{$txt.Function.Name}}(tx, false, &b, &c)
+	err = a.Set{{$txt.Function.Name | IDFK}}(tx, false, &b, &c)
 	if err != nil {
 		t.Fatal(err)
 	}
 
-	count, err := a.{{$txt.Function.Name}}(tx).Count()
+	count, err := a.{{$txt.Function.Name | IDFK}}(tx).Count()
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -144,12 +144,12 @@ func test{{$txt.LocalTable.NameGo}}ToManySetOp{{$txt.Function.Name}}(t *testing.
 		t.Error("count was wrong:", count)
 	}
 
-	err = a.Set{{$txt.Function.Name}}(tx, true, &d, &e)
+	err = a.Set{{$txt.Function.Name | IDFK}}(tx, true, &d, &e)
 	if err != nil {
 		t.Fatal(err)
 	}
 
-	count, err = a.{{$txt.Function.Name}}(tx).Count()
+	count, err = a.{{$txt.Function.Name | IDFK}}(tx).Count()
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -213,15 +213,15 @@ func test{{$txt.LocalTable.NameGo}}ToManySetOp{{$txt.Function.Name}}(t *testing.
 	}
 	{{- end}}
 
-	if a.R.{{$txt.Function.Name}}[0] != &d {
+	if a.R.{{$txt.Function.Name | IDFK}}[0] != &d {
 		t.Error("relationship struct slice not set to correct value")
 	}
-	if a.R.{{$txt.Function.Name}}[1] != &e {
+	if a.R.{{$txt.Function.Name | IDFK}}[1] != &e {
 		t.Error("relationship struct slice not set to correct value")
 	}
 }
 
-func test{{$txt.LocalTable.NameGo}}ToManyRemoveOp{{$txt.Function.Name}}(t *testing.T) {
+func test{{$txt.LocalTable.NameGo}}ToManyRemoveOp{{$txt.Function.Name | IDFK}}(t *testing.T) {
 	var err error
 
 	tx := MustTx(boil.Begin())
@@ -245,12 +245,12 @@ func test{{$txt.LocalTable.NameGo}}ToManyRemoveOp{{$txt.Function.Name}}(t *testi
 		t.Fatal(err)
 	}
 
-	err = a.Add{{$txt.Function.Name}}(tx, true, foreigners...)
+	err = a.Add{{$txt.Function.Name | IDFK}}(tx, true, foreigners...)
 	if err != nil {
 		t.Fatal(err)
 	}
 
-	count, err := a.{{$txt.Function.Name}}(tx).Count()
+	count, err := a.{{$txt.Function.Name | IDFK}}(tx).Count()
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -258,12 +258,12 @@ func test{{$txt.LocalTable.NameGo}}ToManyRemoveOp{{$txt.Function.Name}}(t *testi
 		t.Error("count was wrong:", count)
 	}
 
-	err = a.Remove{{$txt.Function.Name}}(tx, foreigners[:2]...)
+	err = a.Remove{{$txt.Function.Name | IDFK}}(tx, foreigners[:2]...)
 	if err != nil {
 		t.Fatal(err)
 	}
 
-	count, err = a.{{$txt.Function.Name}}(tx).Count()
+	count, err = a.{{$txt.Function.Name | IDFK}}(tx).Count()
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -308,15 +308,15 @@ func test{{$txt.LocalTable.NameGo}}ToManyRemoveOp{{$txt.Function.Name}}(t *testi
 	}
 	{{- end}}
 
-	if len(a.R.{{$txt.Function.Name}}) != 2 {
+	if len(a.R.{{$txt.Function.Name | IDFK}}) != 2 {
 		t.Error("should have preserved two relationships")
 	}
 
 	// Removal doesn't do a stable deletion for performance so we have to flip the order
-	if a.R.{{$txt.Function.Name}}[1] != &d {
+	if a.R.{{$txt.Function.Name | IDFK}}[1] != &d {
 		t.Error("relationship to d should have been preserved")
 	}
-	if a.R.{{$txt.Function.Name}}[0] != &e {
+	if a.R.{{$txt.Function.Name | IDFK}}[0] != &e {
 		t.Error("relationship to e should have been preserved")
 	}
 }

@@ -11,7 +11,7 @@
 // Adds o to related.R.{{$txt.Function.ForeignName}}.
 // Uses the global database handle.
 func (o *{{$txt.LocalTable.NameGo}}) Set{{$txt.Function.Name}}G(insert bool, related *{{$txt.ForeignTable.NameGo}}) error {
-	return o.Set{{$txt.Function.Name}}(boil.GetDB(), insert, related)
+	return o.Set{{$txt.Function.Name | IDFK}}(boil.GetDB(), insert, related)
 }
 
 // Set{{$txt.Function.Name}}P of the {{.Table | singular}} to the related item.
@@ -19,7 +19,7 @@ func (o *{{$txt.LocalTable.NameGo}}) Set{{$txt.Function.Name}}G(insert bool, rel
 // Adds o to related.R.{{$txt.Function.ForeignName}}.
 // Panics on error.
 func (o *{{$txt.LocalTable.NameGo}}) Set{{$txt.Function.Name}}P(exec boil.Executor, insert bool, related *{{$txt.ForeignTable.NameGo}}) {
-	if err := o.Set{{$txt.Function.Name}}(exec, insert, related); err != nil {
+	if err := o.Set{{$txt.Function.Name | IDFK}}(exec, insert, related); err != nil {
 		panic(boil.WrapErr(err))
 	}
 }
@@ -29,7 +29,7 @@ func (o *{{$txt.LocalTable.NameGo}}) Set{{$txt.Function.Name}}P(exec boil.Execut
 // Adds o to related.R.{{$txt.Function.ForeignName}}.
 // Uses the global database handle and panics on error.
 func (o *{{$txt.LocalTable.NameGo}}) Set{{$txt.Function.Name}}GP(insert bool, related *{{$txt.ForeignTable.NameGo}}) {
-	if err := o.Set{{$txt.Function.Name}}(boil.GetDB(), insert, related); err != nil {
+	if err := o.Set{{$txt.Function.Name | IDFK}}(boil.GetDB(), insert, related); err != nil {
 		panic(boil.WrapErr(err))
 	}
 }
@@ -37,7 +37,7 @@ func (o *{{$txt.LocalTable.NameGo}}) Set{{$txt.Function.Name}}GP(insert bool, re
 // Set{{$txt.Function.Name}} of the {{.Table | singular}} to the related item.
 // Sets o.R.{{$txt.Function.Name}} to related.
 // Adds o to related.R.{{$txt.Function.ForeignName}}.
-func (o *{{$txt.LocalTable.NameGo}}) Set{{$txt.Function.Name}}(exec boil.Executor, insert bool, related *{{$txt.ForeignTable.NameGo}}) error {
+func (o *{{$txt.LocalTable.NameGo}}) Set{{$txt.Function.Name | IDFK}}(exec boil.Executor, insert bool, related *{{$txt.ForeignTable.NameGo}}) error {
 	var err error
 	if insert {
 		if err = related.Insert(exec); err != nil {
@@ -68,10 +68,10 @@ func (o *{{$txt.LocalTable.NameGo}}) Set{{$txt.Function.Name}}(exec boil.Executo
 
 	if o.R == nil {
 		o.R = &{{$varNameSingular}}R{
-			{{$txt.Function.Name}}: related,
+			{{$txt.Function.Name | IDFK}}: related,
 		}
 	} else {
-		o.R.{{$txt.Function.Name}} = related
+		o.R.{{$txt.Function.Name | IDFK}} = related
 	}
 
 	{{if .Unique -}}

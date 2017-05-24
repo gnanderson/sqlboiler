@@ -5,7 +5,7 @@
 		{{- $txt := txtsFromFKey $dot.Tables $dot.Table .}}
 {{- $varNameSingular := .Table | singular | camelCase -}}
 {{- $foreignVarNameSingular := .ForeignTable | singular | camelCase}}
-func test{{$txt.LocalTable.NameGo}}ToOneSetOp{{$txt.ForeignTable.NameGo}}Using{{$txt.Function.Name}}(t *testing.T) {
+func test{{$txt.LocalTable.NameGo}}ToOneSetOp{{$txt.ForeignTable.NameGo}}Using{{$txt.Function.Name | IDFK}}(t *testing.T) {
 	var err error
 
 	tx := MustTx(boil.Begin())
@@ -33,12 +33,12 @@ func test{{$txt.LocalTable.NameGo}}ToOneSetOp{{$txt.ForeignTable.NameGo}}Using{{
 	}
 
 	for i, x := range []*{{$txt.ForeignTable.NameGo}}{&b, &c} {
-		err = a.Set{{$txt.Function.Name}}(tx, i != 0, x)
+		err = a.Set{{$txt.Function.Name | IDFK}}(tx, i != 0, x)
 		if err != nil {
 			t.Fatal(err)
 		}
 
-		if a.R.{{$txt.Function.Name}} != x {
+		if a.R.{{$txt.Function.Name | IDFK}} != x {
 			t.Error("relationship struct not set to correct value")
 		}
 
@@ -86,7 +86,7 @@ func test{{$txt.LocalTable.NameGo}}ToOneSetOp{{$txt.ForeignTable.NameGo}}Using{{
 }
 {{- if .Nullable}}
 
-func test{{$txt.LocalTable.NameGo}}ToOneRemoveOp{{$txt.ForeignTable.NameGo}}Using{{$txt.Function.Name}}(t *testing.T) {
+func test{{$txt.LocalTable.NameGo}}ToOneRemoveOp{{$txt.ForeignTable.NameGo}}Using{{$txt.Function.Name | IDFK}}(t *testing.T) {
 	var err error
 
 	tx := MustTx(boil.Begin())
@@ -107,15 +107,15 @@ func test{{$txt.LocalTable.NameGo}}ToOneRemoveOp{{$txt.ForeignTable.NameGo}}Usin
 		t.Fatal(err)
 	}
 
-	if err = a.Set{{$txt.Function.Name}}(tx, true, &b); err != nil {
+	if err = a.Set{{$txt.Function.Name | IDFK}}(tx, true, &b); err != nil {
 		t.Fatal(err)
 	}
 
-	if err = a.Remove{{$txt.Function.Name}}(tx, &b); err != nil {
+	if err = a.Remove{{$txt.Function.Name | IDFK}}(tx, &b); err != nil {
 		t.Error("failed to remove relationship")
 	}
 
-	count, err := a.{{$txt.Function.Name}}(tx).Count()
+	count, err := a.{{$txt.Function.Name | IDFK}}(tx).Count()
 	if err != nil {
 		t.Error(err)
 	}
@@ -123,7 +123,7 @@ func test{{$txt.LocalTable.NameGo}}ToOneRemoveOp{{$txt.ForeignTable.NameGo}}Usin
 		t.Error("want no relationships remaining")
 	}
 
-	if a.R.{{$txt.Function.Name}} != nil {
+	if a.R.{{$txt.Function.Name | IDFK}} != nil {
 		t.Error("R struct entry should be nil")
 	}
 

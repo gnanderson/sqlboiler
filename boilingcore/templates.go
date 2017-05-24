@@ -231,4 +231,7 @@ var templateFunctions = template.FuncMap{
 	"columnNames":            bdb.ColumnNames,
 	"columnDBTypes":          bdb.ColumnDBTypes,
 	"getTable":               bdb.GetTable,
+
+	// foreign keys with name ID
+	"IDFK": strmangle.IDFK,
 }

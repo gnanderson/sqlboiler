@@ -8,7 +8,7 @@
 		{{- $slice := printf "%sSlice" $txt.LocalTable.NameGo}}
 // Load{{$txt.Function.Name}} allows an eager lookup of values, cached into the
 // loaded structs of the objects.
-func ({{$varNameSingular}}L) Load{{$txt.Function.Name}}(e boil.Executor, singular bool, {{$arg}} interface{}) error {
+func ({{$varNameSingular}}L) Load{{$txt.Function.Name | IDFK}}(e boil.Executor, singular bool, {{$arg}} interface{}) error {
 	var slice []*{{$txt.LocalTable.NameGo}}
 	var object *{{$txt.LocalTable.NameGo}}
 
@@ -70,7 +70,7 @@ func ({{$varNameSingular}}L) Load{{$txt.Function.Name}}(e boil.Executor, singula
 	}
 
 	if singular {
-		object.R.{{$txt.Function.Name}} = resultSlice[0]
+		object.R.{{$txt.Function.Name | IDFK}} = resultSlice[0]
 		return nil
 	}
 
@@ -81,7 +81,7 @@ func ({{$varNameSingular}}L) Load{{$txt.Function.Name}}(e boil.Executor, singula
 			{{else -}}
 			if local.{{$txt.Function.LocalAssignment}} == foreign.{{$txt.Function.ForeignAssignment}} {
 			{{end -}}
-				local.R.{{$txt.Function.Name}} = foreign
+				local.R.{{$txt.Function.Name | IDFK}} = foreign
 				break
 			}
 		}

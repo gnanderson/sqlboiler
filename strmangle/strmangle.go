@@ -667,3 +667,11 @@ func ReplaceReservedWords(word string) string {
 	}
 	return word
 }
+
+func IDFK(word string) string {
+	if word == "ID" {
+		return word + "FK"
+	}
+
+	return word
+}

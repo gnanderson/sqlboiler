@@ -23,17 +23,17 @@ type {{$modelName}} struct {
 type {{$modelNameCamel}}R struct {
 	{{range .Table.FKeys -}}
 	{{- $txt := txtsFromFKey $dot.Tables $dot.Table . -}}
-	{{$txt.Function.Name}} *{{$txt.ForeignTable.NameGo}}
+	{{$txt.Function.Name | IDFK}} *{{$txt.ForeignTable.NameGo}}
 	{{end -}}
 
 	{{range .Table.ToOneRelationships -}}
 	{{- $txt := txtsFromOneToOne $dot.Tables $dot.Table . -}}
-	{{$txt.Function.Name}} *{{$txt.ForeignTable.NameGo}}
+	{{$txt.Function.Name | IDFK}} *{{$txt.ForeignTable.NameGo}}
 	{{end -}}
 
 	{{range .Table.ToManyRelationships -}}
 	{{- $txt := txtsFromToMany $dot.Tables $dot.Table . -}}
-	{{$txt.Function.Name}} {{$txt.ForeignTable.Slice}}
+	{{$txt.Function.Name | IDFK}} {{$txt.ForeignTable.Slice}}
 	{{end -}}{{/* range tomany */}}
 }
 

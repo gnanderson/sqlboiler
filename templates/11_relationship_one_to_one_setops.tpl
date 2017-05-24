@@ -84,10 +84,10 @@ func (o *{{$txt.LocalTable.NameGo}}) Set{{$txt.Function.Name}}(exec boil.Executo
 
 	if related.R == nil {
 		related.R = &{{$foreignVarNameSingular}}R{
-			{{$txt.Function.ForeignName}}: o,
+			{{$txt.Function.ForeignName | IDFK}}: o,
 		}
 	} else {
-		related.R.{{$txt.Function.ForeignName}} = o
+		related.R.{{$txt.Function.ForeignName | IDFK}} = o
 	}
 	return nil
 }
